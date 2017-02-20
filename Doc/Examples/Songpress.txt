@@ -1,0 +1,7 @@
+Description
+
+Songpress allow to choose the font, the default is Arial.
+
+Verse  -> Normal text
+Chorus -> Bold
+Chords -> Italics

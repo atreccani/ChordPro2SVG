@@ -1,0 +1,4 @@
+Description
+
+Songbook allow to choose different font, style, colour an background for each part of the song.
+The default used font is Arial.
