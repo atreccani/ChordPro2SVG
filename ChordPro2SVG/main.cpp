@@ -5,6 +5,7 @@
 #include <QSvgGenerator>
 #include <QTextStream>
 
+#include "ChordProFile.h"
 
 // 90 DPI
 #define A4_INKSCAPE_WIDTH	744
@@ -16,41 +17,17 @@ QTextStream cin(stdin);
 class ChordProPainter : public QPainter
 {
 public:
-	void paint(void)
+	void paint(ChordProFile &chproFile)
 	{
 		setPen(Qt::NoPen);
-
-
 
 		setPen(QPen(Qt::GlobalColor::red, 2, Qt::DashLine));
 		drawRect((QRect(0, 0, A4_INKSCAPE_WIDTH, A4_INKSCAPE_HEIGHT)));
 
-		// QRect(int x, int y, int width, int height)
-		fillRect(QRect(50, A4_INKSCAPE_HEIGHT - 250, 200, 200), Qt::GlobalColor::blue);
-
-		QPainterPath curve;
-		curve.moveTo(0, 0);
-
-		// cubicTo(c1X, c1Y, c2X, c2Y, endPointX, endPointY)
-		// Adds a cubic Bezier curve between the current position and the end point(endPointX, endPointY) 
-		// with control points specified by(c1X, c1Y) and (c2X, c2Y).
-		curve.cubicTo(99, 0, 50, 50, 99, 99);
-		curve.cubicTo(0, 99, 50, 50, 0, 0);
-
-		setBrush(Qt::GlobalColor::yellow);
-		setPen(Qt::black);
-
-		// Translates the coordinate system by the given offset
-		translate(100, A4_INKSCAPE_HEIGHT - 200);
-		drawPath(curve);
-
-		// painter.setFont(font);
-
-		resetTransform();
-
+		setPen(QPen(Qt::GlobalColor::black));
 		QFont font;
-		setFont(QFont("Arial", 40, QFont::Bold));
-		drawText(330, 40, "Title");
+		setFont(QFont("Arial", 20, QFont::Bold));
+		drawText(330, 40, chproFile.title());
 
 		putline(40, 120, QString::fromWCharArray(L"[C]Penso che un sogno [C#dim7]così non ritorni mai [Dm]più"));
 
@@ -62,7 +39,7 @@ public:
 		QFontMetrics fm(myFont, device());
 		int xLyrics = x;
 		int xChords = x;
-		bool bChord;
+		bool bChord = false;
 
 		setFont(myFont);
 
@@ -75,12 +52,13 @@ public:
 					// special character, not to be printed
 					continue;
 				}
-			} else {
+			}
+			else {
 				if (mystr[i] == "[") {
 					// start of chord sequence
 					bChord = true;
 					// align chord coordinate to lyrics 
-					xChords = xLyrics;	// advance current position horizontally
+					xChords = xLyrics;
 
 					// special character, not to be printed
 					continue;
@@ -90,9 +68,10 @@ public:
 			QString myChar = mystr[i];	// get character to print
 			if (bChord) {
 				// Print Chord
-				drawText(xChords, y -20, myChar);	// output char
+				drawText(xChords, y - 20, myChar);	// output char
 				xChords += fm.width(myChar, 1);		// advance current position horizontally
-			} else {
+			}
+			else {
 				// Print Lyrics
 				drawText(xLyrics, y, myChar);		// output char
 				xLyrics += fm.width(myChar, 1);		// advance current position horizontally
@@ -104,49 +83,6 @@ public:
 
 };
 
-class ChordProFile : public QFile
-{
-public:
-	ChordProFile(const QString &name)
-		: QFile(name)
-	{
-	}
-
-	void load(void) 
-	{
-		QString line;
-		QTextStream in(this);
-
-		// Open the file for reading
-		if (!open(QIODevice::ReadOnly)) {
-			cout << "Unable to open file" << endl;
-		}
-
-		// Assume file is coded in UTF-8
-		in.setCodec("UTF-8");
-
-		// Load entire file into a string list
-		while (!in.atEnd()) {
-			QString line = in.readLine();
-			lines.append(line);
-		}
-
-		// Close the file
-		close();
-	}
-
-	void print(void)
-	{
-		foreach(const QString &line, lines) {
-			cout << line << endl;
-		}
-	}
-
-private:
-	QStringList lines;
-};
-
-
 int main(int argc, char *argv[])
 {
 	// Needed for QFont
@@ -155,9 +91,13 @@ int main(int argc, char *argv[])
 	// Windows specific: use Code Page 850 (Western Europe) for console writing
 	cout.setCodec("CP-850");
 
+	// Data files that contain ChordPro data are usually given a file name extension ".cho".
+	// Other often used extensions are ".crd", ".chordpro", and ".chopro".
+
 	ChordProFile file("../Work/Nel blu dipinto di blu (Domenico Modugno).pro");
-	file.load();
-	file.print();
+	file.load(cout);
+	file.print(cout);
+	file.find_metadata();
 
 	QString path = "../Work/ChordProTest.svg";
 
@@ -171,7 +111,7 @@ int main(int argc, char *argv[])
 
 	ChordProPainter painter;
 	painter.begin(&generator);
-	painter.paint();
+	painter.paint(file);
 	painter.end();
 
 	// get actual size QPaintDevice 

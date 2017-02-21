@@ -14,26 +14,14 @@ font-family="MS Shell Dlg 2" font-size="8.1" font-weight="400" font-style="norma
 <rect x="0" y="0" width="744" height="1052"/>
 </g>
 
-<g fill="#0000ff" fill-opacity="1" stroke="none" transform="matrix(1,0,0,1,0,0)"
-font-family="MS Shell Dlg 2" font-size="8.1" font-weight="400" font-style="normal" 
+<g fill="none" stroke="#000000" stroke-opacity="1" stroke-width="1" stroke-linecap="square" stroke-linejoin="bevel" transform="matrix(1,0,0,1,0,0)"
+font-family="Arial" font-size="20" font-weight="700" font-style="normal" 
 >
-<rect x="50" y="802" width="200" height="200"/>
+<text fill="#000000" fill-opacity="1" stroke="none" xml:space="preserve" x="330" y="40" font-family="Arial" font-size="20" font-weight="700" font-style="normal" 
+ >Nel blu dipinto di blu</text>
 </g>
 
-<g fill="#ffff00" fill-opacity="1" stroke="#000000" stroke-opacity="1" stroke-width="1" stroke-linecap="square" stroke-linejoin="bevel" transform="matrix(1,0,0,1,100,852)"
-font-family="MS Shell Dlg 2" font-size="8.1" font-weight="400" font-style="normal" 
->
-<path vector-effect="none" fill-rule="evenodd" d="M0,0 C99,0 50,50 99,99 C0,99 50,50 0,0 "/>
-</g>
-
-<g fill="#ffff00" fill-opacity="1" stroke="#000000" stroke-opacity="1" stroke-width="1" stroke-linecap="square" stroke-linejoin="bevel" transform="matrix(1,0,0,1,0,0)"
-font-family="Arial" font-size="40" font-weight="700" font-style="normal" 
->
-<text fill="#000000" fill-opacity="1" stroke="none" xml:space="preserve" x="330" y="40" font-family="Arial" font-size="40" font-weight="700" font-style="normal" 
- >Title</text>
-</g>
-
-<g fill="#ffff00" fill-opacity="1" stroke="#000000" stroke-opacity="1" stroke-width="1" stroke-linecap="square" stroke-linejoin="bevel" transform="matrix(1,0,0,1,0,0)"
+<g fill="none" stroke="#000000" stroke-opacity="1" stroke-width="1" stroke-linecap="square" stroke-linejoin="bevel" transform="matrix(1,0,0,1,0,0)"
 font-family="Calibri" font-size="16" font-weight="400" font-style="normal" 
 >
 <text fill="#000000" fill-opacity="1" stroke="none" xml:space="preserve" x="40" y="100" font-family="Calibri" font-size="16" font-weight="400" font-style="normal" 
