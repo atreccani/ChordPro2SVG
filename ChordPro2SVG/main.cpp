@@ -1,3 +1,4 @@
+#include <QDir>
 #include <QFile>
 #include <QGuiApplication> 
 #include <QPainter>
@@ -17,7 +18,7 @@ QTextStream cin(stdin);
 class ChordProPainter : public QPainter
 {
 public:
-	void paint(ChordProFile &chproFile)
+	void paint(ChordProFile *chproFile)
 	{
 		setPen(Qt::NoPen);
 
@@ -27,7 +28,7 @@ public:
 		setPen(QPen(Qt::GlobalColor::black));
 		QFont font;
 		setFont(QFont("Arial", 20, QFont::Bold));
-		drawText(330, 40, chproFile.title());
+		drawText(330, 40, chproFile->title());
 
 		putline(40, 120, QString::fromWCharArray(L"[C]Penso che un sogno [C#dim7]così non ritorni mai [Dm]più"));
 
@@ -83,21 +84,48 @@ public:
 
 };
 
+void fill_chordpro_file_list(QList <ChordProFile *> &list_ref)
+{
+	QDir dir("../Work");
+	if (!dir.exists())
+		qWarning("Cannot find the example directory");
+
+	dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
+	dir.setSorting(QDir::Size | QDir::Reversed);
+
+	QFileInfoList list = dir.entryInfoList();
+
+	for (int i = 0; i < list.size(); ++i) {
+		QString sName = list.at(i).filePath();
+		ChordProFile *file = new ChordProFile(sName);
+		if (file->load(cout)) {
+			list_ref.append(file);
+		}
+	}
+}
+
 int main(int argc, char *argv[])
 {
-	// Needed for QFont
+	QList <ChordProFile *> ChordProFileList;
+
+		// Needed for QFont
 	QGuiApplication a(argc, argv);
 
 	// Windows specific: use Code Page 850 (Western Europe) for console writing
 	cout.setCodec("CP-850");
 
-	// Data files that contain ChordPro data are usually given a file name extension ".cho".
-	// Other often used extensions are ".crd", ".chordpro", and ".chopro".
+	// Fill a list of valid ChordPro files, each file will also be fully loaded into memory (as a QString)
+	fill_chordpro_file_list(ChordProFileList);
 
-	ChordProFile file("../Work/Nel blu dipinto di blu (Domenico Modugno).pro");
-	file.load(cout);
-	file.print(cout);
-	file.find_metadata();
+	// Print a list of found ChordPro files
+	cout << "Found " << ChordProFileList.size() << " ChordPro files:" << endl;
+	for (int ii = 0; ii < ChordProFileList.size(); ii++) {
+		cout << " - " << ChordProFileList[ii]->title() << endl;
+	}
+	cout << endl;
+
+	ChordProFile *file = ChordProFileList[0];
+	file->print(cout);
 
 	QString path = "../Work/ChordProTest.svg";
 

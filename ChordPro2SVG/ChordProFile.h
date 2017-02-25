@@ -11,16 +11,15 @@ class ChordProFile : public QFile
 {
 public:
 	ChordProFile(const QString &name);
-	void load(QTextStream &cout);
-	bool get_directive(const QString in, QString &name, QString &value);
-	void find_metadata(void);
+	bool load(QTextStream &cout);
+	bool getDirective(const QChar *str, QString &name, QString &value, int *parsed_len);
 	void print(QTextStream &cout);
 	QString &title(void);
 
 private:
-	QStringList	m_Lines;
-	QString		m_Title;
-	QString		m_Subtitle;
+	QString			m_FullFile;
+	QString			m_Title;
+	QStringList		m_Subtitles;
 };
 
 

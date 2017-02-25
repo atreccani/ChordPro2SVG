@@ -1,0 +1,13 @@
+Distributed under the Creative Commons license:
+http://creativecommons.org/licenses/by-nc-sa/3.0/
+
+The NewRealBookChords.ttf font was initially created by Jochen
+Pietsch. It has been modified to improve readability and to add a few
+missing characters.
+
+From Jochen's web site:
+"Real Book Chords, Real Book Title, New Real Book Chords and Colorado
+Book Text are licensed under a Creative Commons
+Attribution-Noncommercial-Share Alike 3.0 Unported License.
+Based on content from http://notation.jochenpietsch.de.
+Created 2004 by Jochen Pietsch" 

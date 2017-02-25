@@ -67,7 +67,7 @@
 		</TD>
 		<TD>
 			<H1 class="title">ChordPro</H1>
-			<DIV class="info">  Printing Lyrics with Chords </DIV>
+			<DIV class="info">Printing Lyrics with Chords </DIV>
 		</TD>
 	</TR>
 	<TR>
@@ -80,7 +80,7 @@
 			<TABLE border="0" cellspacing="0" cellpadding="0">
 			<TBODY>
 				<TR>
-					<TD align="left" class="menutitle">Site menu     </TD>
+					<TD align="left" class="menutitle">Site menu</TD>
 				</TR>
 				<TR>
 					<TD><HR></TD>
@@ -97,66 +97,66 @@
 			</TABLE>
 			</DIV>
 		</TD>
-    <TD>
+	<TD>
 	<H3>Stay tuned for the upcoming release of 
 	<A href="http://www.chordpro.org/chordpro/v50.html">ChordPro format version 5.0!</A></H3>
 	<P>Version 5.0 can be expected early 2017 and will include many interesting enhancements and new features.</P>
 	<H3>The ‘Chord/ChordPro’ format, version 4.6</H3>
 	<P><STRONG>Chord</STRONG> or <STRONG>ChordPro</STRONG> is the name of a simple text format for the notation of
-	lyrics with chords. Although primarily intended for guitarists, it can be used for all kinds of musical purposes. 
-	<P>The Chord format is invented by the original authors of the Chord program, Mario Dorion and Martin Leclerc. 
+	lyrics with chords. Although primarily intended for guitarists, it can be used for all kinds of musical purposes.
+	<P>The Chord format is invented by the original authors of the Chord program, Mario Dorion and Martin Leclerc.
 	For unknown reasons the users of the format started to call it ChordPro.</P>
-	<P>Several tools exist that can process data in ChordPro format: to print nice song sheets, create web pages, 
-	or to transform it in into a format suitable for other tools. 
-	<P>The following specification of the ChordPro format is based upon the original Chord program, and must therefore 
+	<P>Several tools exist that can process data in ChordPro format: to print nice song sheets, create web pages,
+	or to transform it in into a format suitable for other tools.
+	<P>The following specification of the ChordPro format is based upon the original Chord program, and must therefore
 	be considered official. The reference implementation is the <STRONG>Chord<I><SUB>ii</SUB></I></STRONG> program,
-	which is the current incarnation of the original Chord program. Common extensions to ChordPro are denoted in 
-	<FONT color="#00b000">green</FONT>. 
-	<P>ChordPro processing programs usually produce nicely formatted printed output, or HTML pages, or something 
+	which is the current incarnation of the original Chord program. Common extensions to ChordPro are denoted in
+	<FONT color="#00b000">green</FONT>.
+	<P>ChordPro processing programs usually produce nicely formatted printed output, or HTML pages, or something
 	else meant for viewing. How the output should look like is <STRONG>not</STRONG> part of the ChordPro data standard.
-	The reference implementation produces PDF documents, suitable for viewing and printing. Details like page margins, 
-	borders and fonts can be controlled using external configuration files. For more information, see the ChordPro 
+	The reference implementation produces PDF documents, suitable for viewing and printing. Details like page margins,
+	borders and fonts can be controlled using external configuration files. For more information, see the ChordPro
 	program documentation.</P>
-	<P>Most characteristics are quite generic. For example, a piece of text can be shown in a way that makes it 
-	different from the rest of the text. Where appropriate, a <FONT color="#0000b0">blue</FONT> note will indicate 
-	the way the reference implementation does it. 
-	<P>Data files that contain ChordPro data are usually given a file name extension <STRONG>.cho</STRONG>. 
-	Other often used extensions are <STRONG>.crd</STRONG>, <STRONG>.chordpro</STRONG>, and <STRONG>.chopro</STRONG>.  
+	<P>Most characteristics are quite generic. For example, a piece of text can be shown in a way that makes it
+	different from the rest of the text. Where appropriate, a <FONT color="#0000b0">blue</FONT> note will indicate
+	the way the reference implementation does it.
+	<P>Data files that contain ChordPro data are usually given a file name extension <STRONG>.cho</STRONG>.
+	Other often used extensions are <STRONG>.crd</STRONG>, <STRONG>.chordpro</STRONG>, and <STRONG>.chopro</STRONG>.
 	<H4>General description of the ChordPro format</H4>
-	<P>A ChordPro data file is a simple text file, which is interpreted line by line. Line endings should obey the rules 
-	of the platform. <FONT color="#0000b0">Chord<I><SUB>ii</SUB></I>: Line endings according to the Unix, Linux, 
+	<P>A ChordPro data file is a simple text file, which is interpreted line by line. Line endings should obey the rules
+	of the platform. <FONT color="#0000b0">Chord<I><SUB>ii</SUB></I>: Line endings according to the Unix, Linux,
 	Microsoft Windows and OS/X platforms are all handled on all platforms.</FONT></P>
 	<P>ChordPro file processing tools may impose restrictions on the encoding of the data in the file.
 	Some tools may require the data to be in ASCII encoding, other tools may allow a Unicode encoding.
 	<FONT color="#00b000">Chord version 3.6 and later accepts the full ISO 8859.1 (Latin1) character set.</FONT>
-	<FONT color="#0000b0">Chord<I><SUB>ii</SUB></I>:  Version 4.5 can be build to accept the full ISO 8859.2 character set. </FONT> 
-	<P>Lines that have a <CODE>#</CODE> symbol at the very beginning of the line are ignored. They can be used to insert 
-	comments into the ChordPro file. These comments are completely ignored and should not be confused with the 
-	<I>comment</I> directive, see below. 
-	<P>Lines that start with <CODE>{</CODE> and end with <CODE>}</CODE> (curly brackets or braces) are directives. 
-	They are used to pass instructions to the program that processes the data. Leading and trailing whitespace is 
-	allowed, but discouraged. 
+	<FONT color="#0000b0">Chord<I><SUB>ii</SUB></I>:  Version 4.5 can be build to accept the full ISO 8859.2 character set. </FONT>
+	<P>Lines that have a <CODE>#</CODE> symbol at the very beginning of the line are ignored. They can be used to insert
+	comments into the ChordPro file. These comments are completely ignored and should not be confused with the
+	<I>comment</I> directive, see below.
+	<P>Lines that start with <CODE>{</CODE> and end with <CODE>}</CODE> (curly brackets or braces) are directives.
+	They are used to pass instructions to the program that processes the data. Leading and trailing whitespace is
+	allowed, but discouraged.
 	
 	<H4>Song lines</H4>
-	<P>Lines that are not directives are song lines. They contain the lyrics of the song. Inside lyric lines the chords 
-	are specified between <CODE>[</CODE> and <CODE>]</CODE> (square brackets). Chords should immediately precede the 
-	syllable of text they apply to. For example:	
+	<P>Lines that are not directives are song lines. They contain the lyrics of the song. Inside lyric lines the chords
+	are specified between <CODE>[</CODE> and <CODE>]</CODE> (square brackets). Chords should immediately precede the
+	syllable of text they apply to. For example:
 	<PRE><BLOCKQUOTE class="code">
 	Swing [D]low, sweet [G]chari[D]ot,
 	</BLOCKQUOTE></PRE>
-	When processed, this results in: 
+	When processed, this results in:
 	<PRE><BLOCKQUOTE class="code">
 	      D          G    D
 	Swing low, sweet chariot,
 	</BLOCKQUOTE></PRE>
 	
 	<H4>Directives</H4>
-	<P>Many directives have long and short alternatives. For example, the long form for the directive ‘title’ is 
-	<CODE>title</CODE>, and the short alternative is <CODE>t</CODE>. It is, however, advised to use the long 
-	alternative whenever possible, since the short alternatives may lead to confusion. 
-	<P>For directives that take arguments, the arguments are separated from the directive name by a 
-	<CODE>:</CODE> (colon) or a space. 
-	<FONT color="#00b000">The reference implementation uses any sequence of colons and spaces to separate the 
+	<P>Many directives have long and short alternatives. For example, the long form for the directive ‘title’ is
+	<CODE>title</CODE>, and the short alternative is <CODE>t</CODE>. It is, however, advised to use the long
+	alternative whenever possible, since the short alternatives may lead to confusion.
+	<P>For directives that take arguments, the arguments are separated from the directive name by a
+	<CODE>:</CODE> (colon) or a space.
+	<FONT color="#00b000">The reference implementation uses any sequence of colons and spaces to separate the
 	parts of the directive. </FONT>
 
 	<H4>Preamble directives</H4>
@@ -180,8 +180,9 @@
 			<P><CODE>{title:<VAR>text</VAR>}</CODE><BR><CODE>{t:<VAR>text</VAR>}</CODE></P></TD>
 		<TD>
 			<P>Define <VAR>text</VAR> as the song title.	 <BR><FONT color="#0000b0">Chord<I><SUB>ii</SUB></I>: 
-			The title is shown in a bigger size on top of the page.</FONT></P></TD></TR>
-        <TR>
+			The title is shown in a bigger size on top of the page.</FONT></P></TD>
+		</TR>
+		<TR>
 		<TD class="left">
 			<P><CODE>{subtitle:<VAR>text</VAR>}</CODE><BR><CODE>{st:<VAR>text</VAR>}</CODE></P></TD>
 		<TD>
@@ -196,7 +197,7 @@
 
 	<H4>Formatting directives</H4>
 	<TABLE class="dirtbl">
-		<TBODY>
+	<TBODY>
 		<TR>
 			<TD class="left">
 				<P><CODE>{comment:<VAR>text</VAR>}</CODE><BR><CODE>{c:<VAR>text</VAR>}</CODE></P>
@@ -255,103 +256,133 @@
 			</P>
 			</TD>
 		 </TR>
-		</TBODY>
+	</TBODY>
 	</TABLE>
-      
+
 	<H4>Output related directives</H4>
 	<TABLE class="dirtbl">
-        <TBODY>
-        <TR>
-          <TD class="left">
-            <P><CODE>{textfont:<VAR>fontname</VAR><CODE>}<BR><CODE>{tf:<VAR>fontname</VAR><CODE>}</CODE></CODE></CODE></CODE></P></TD>
-          <TD>
-            <P>Sets the font used to print text to <VAR>fontname</VAR>.	This 
-            must be the name of a known PostScript font.	 <BR><FONT color="#0000b0">Chord<I><SUB>ii</SUB></I>: 
-            	Default font for text is <CODE>Times-Roman</CODE>.
-        	 </FONT></P></TD></TR>
-        <TR>
-          <TD class="left">
-            <P><CODE>{textsize:<VAR>fontsize</VAR><CODE>}</CODE><BR><CODE>{ts:<VAR>fontsize</VAR><CODE>}</CODE></CODE></CODE></P></TD>
-          <TD>
-            <P>Sets the size of the font used for texts.	 <BR><FONT color="#0000b0">Chord<I><SUB>ii</SUB></I>: 
-            	Default font size for text is <CODE>12</CODE>.	 </FONT></P></TD></TR>
-        <TR>
-          <TD class="left">
-            <P><CODE>{chordfont:<VAR>fontname</VAR><CODE>}</CODE><BR><CODE>{cf:<VAR>fontname</VAR><CODE>}</CODE></CODE></CODE></P></TD>
-          <TD>
-            <P>Sets the font used to print chords to <VAR>fontname</VAR>.	This 
-            must be the name of a known PostScript font.	 <BR><FONT color="#0000b0">Chord<I><SUB>ii</SUB></I>: 
-            	Default font for chords is <CODE>Helvetica-Oblique</CODE>.
-            	 </FONT></P></TD></TR>
-        <TR>
-          <TD class="left">
-            <P><CODE>{chordsize:<VAR>fontsize</VAR><CODE>}</CODE><BR><CODE>{cs:<VAR>fontsize</VAR><CODE>}</CODE></CODE></CODE></P></TD>
-          <TD>
-            <P>Sets the size of the font used for chords.	 <BR><FONT color="#0000b0">Chord<I><SUB>ii</SUB></I>: 
-            	Default font size for chords is <CODE>9</CODE>.	 </FONT></P></TD></TR>
-        <TR>
-          <TD class="left">
-            <P><CODE>{chordcolour:<VAR>colour</VAR><CODE>}</CODE></CODE></P></TD>
-          <TD>
-            <P>Sets the colour used for chords.	 <BR><VAR>Colour</VAR> may be a 
-            known colour, such as	 <CODE>red</CODE>, or a <CODE>#-</CODE>coded 
-            colour, e.g.	 <CODE>#fcfe1a</CODE>.     </P></TD></TR>
-        <TR>
-          <TD class="left">
-            <P><CODE>{no_grid}</CODE><BR><CODE>{ng}</CODE></P></TD>
-          <TD>
-            <P>Suppresses printing of the list of chords at the end of the
-            	current song.</P></TD></TR>
-        <TR>
-          <TD class="left">
-            <P><CODE>{grid}</CODE><BR><CODE>{g}</CODE></P></TD>
-          <TD>
-            <P>Enables printing of the list of chords at the end of the	current 
-            song.	 <BR><FONT color="#0000b0">Chord<I><SUB>ii</SUB></I>: 	The 
-            <CODE>-g</CODE> and <CODE>-G</CODE> command line options	can be used 
-            to control what chords are printed.	 </FONT></P></TD></TR>
-        <TR>
-          <TD class="left">
-            <P style="color: blue;"><CODE>{titles:<VAR>flush</VAR>}</CODE></P></TD>
-          <TD>
-            <P><FONT color="#0000b0">Chord<I><SUB>ii</SUB></I>: 	If 
-            <VAR>flush</VAR> is	 <CODE>left</CODE>, song titles are printed to 
-            the left of the	page. If <VAR>flush</VAR> is <CODE>center</CODE>, or 
-            if this	directive is missing, titles are printed centered on top of
-            	the page.	 </FONT></P></TD></TR>
-        <TR>
-          <TD class="left">
-            <P><CODE>{new_page}</CODE><BR><CODE>{np}</CODE></P></TD>
-          <TD>
-            <P>Forces a page break.	 <BR><FONT 
-            color="#0000b0">Chord<I><SUB>ii</SUB></I>: 	When printing in 2-up or 
-            4-up page mode, this command forces a	logical page break. Otherwise 
-            it is the same as a physical	page break.	 </FONT></P></TD></TR>
-        <TR>
-          <TD class="left">
-            <P><CODE>{new_physical_page}</CODE><BR><CODE>{npp}</CODE></P></TD>
-          <TD>
-            <P>Forces a physical page break.	 </P></TD></TR>
-        <TR>
-          <TD class="left">
-            <P><CODE>{columns:<VAR>number</VAR>}</CODE><BR><CODE>{col:<VAR>number</VAR>}</CODE></P></TD>
-          <TD>
-            <P>Specifies the number of columns to print the current song in.
-            	 </P></TD></TR>
-        <TR>
-          <TD class="left">
-            <P><CODE>{column_break}</CODE><BR><CODE>{colb}</CODE></P></TD>
-          <TD>
-            <P>Forces a column break.	 </P></TD></TR>
-        <TR>
-          <TD class="left">
-            <P 
-          style="color: blue;"><CODE>{pagetype:<VAR>type</VAR>}</CODE></P></TD>
-          <TD>
-            <P><FONT color="#0000b0">Chord<I><SUB>ii</SUB></I>: 	Sets the page 
-            type for the PostScript	output. <VAR>type</VAR> can be either 
-            <CODE>a4</CODE> or	 <CODE>letter</CODE>. 	 </FONT>
-        	 </P></TD></TR></TBODY>
+	<TBODY>
+		<TR>
+			<TD class="left">
+				<P><CODE>{textfont:<VAR>fontname</VAR><CODE>}<BR><CODE>{tf:<VAR>fontname</VAR><CODE>}</CODE></CODE></CODE></CODE></P>
+			</TD>
+			<TD>
+				<P>Sets the font used to print text to <VAR>fontname</VAR>. This must be the name of a known PostScript font.<BR>
+				<FONT color="#0000b0">Chord<I><SUB>ii</SUB></I>: Default font for text is <CODE>Times-Roman</CODE>.</FONT></P>
+			</TD>
+		</TR>
+		<TR>
+			<TD class="left">
+				<P><CODE>{textsize:<VAR>fontsize</VAR><CODE>}</CODE><BR><CODE>{ts:<VAR>fontsize</VAR><CODE>}</CODE></CODE></CODE></P>
+			</TD>
+			<TD>
+				<P>Sets the size of the font used for texts.<BR>
+				<FONT color="#0000b0">Chord<I><SUB>ii</SUB></I>: Default font size for text is <CODE>12</CODE>.</FONT></P>
+			</TD>
+		</TR>
+		<TR>
+			<TD class="left">
+				<P><CODE>{chordfont:<VAR>fontname</VAR><CODE>}</CODE><BR><CODE>{cf:<VAR>fontname</VAR><CODE>}</CODE></CODE></CODE></P>
+			</TD>
+			<TD>
+				<P>Sets the font used to print chords to <VAR>fontname</VAR>. This must be the name of a known PostScript font.<BR>
+				<FONT color="#0000b0">Chord<I><SUB>ii</SUB></I>: Default font for chords is <CODE>Helvetica-Oblique</CODE>.</FONT></P>
+			</TD>
+		</TR>
+		<TR>
+			<TD class="left">
+				<P><CODE>{chordsize:<VAR>fontsize</VAR><CODE>}</CODE><BR><CODE>{cs:<VAR>fontsize</VAR><CODE>}</CODE></CODE></CODE></P>
+			</TD>
+			<TD>
+				<P>Sets the size of the font used for chords.<BR>
+				<FONT color="#0000b0">Chord<I><SUB>ii</SUB></I>: Default font size for chords is <CODE>9</CODE>.</FONT>
+				</P>
+			</TD>
+		</TR>
+		<TR>
+			<TD class="left">
+				<P><CODE>{chordcolour:<VAR>colour</VAR><CODE>}</CODE></CODE></P>
+			</TD>
+			<TD>
+				<P>Sets the colour used for chords. <BR><VAR>Colour</VAR> may be a known colour,
+				such as	 <CODE>red</CODE>, or a <CODE>#-</CODE>coded colour, e.g. <CODE>#fcfe1a</CODE>.
+				</P>
+			</TD>
+		</TR>
+		<TR>
+			<TD class="left">
+				<P><CODE>{no_grid}</CODE><BR><CODE>{ng}</CODE></P>
+			</TD>
+			<TD>
+				<P>Suppresses printing of the list of chords at the end of the current song.</P>
+			</TD>
+		</TR>
+		<TR>
+			<TD class="left">
+				<P><CODE>{grid}</CODE><BR><CODE>{g}</CODE></P></TD>
+			<TD>
+				<P>Enables printing of the list of chords at the end of the current song.<BR>
+				<FONT color="#0000b0">Chord<I><SUB>ii</SUB></I>: The <CODE>-g</CODE> and <CODE>-G</CODE>
+				command line options	can be used to control what chords are printed.	 </FONT></P>
+			</TD>
+		</TR>
+		<TR>
+			<TD class="left">
+				<P style="color: blue;"><CODE>{titles:<VAR>flush</VAR>}</CODE></P>
+			</TD>
+			<TD>
+				<P><FONT color="#0000b0">Chord<I><SUB>ii</SUB></I>:
+				If <VAR>flush</VAR> is <CODE>left</CODE>, song titles are printed to the left of the page.
+				If <VAR>flush</VAR> is <CODE>center</CODE>, or if this directive is missing, titles are 
+				printed centered on top of the page.
+				</FONT></P>
+			</TD>
+		</TR>
+		<TR>
+			<TD class="left">
+				<P><CODE>{new_page}</CODE><BR><CODE>{np}</CODE></P>
+			</TD>
+			<TD>
+				<P>Forces a page break.<BR><FONT color="#0000b0">Chord<I><SUB>ii</SUB></I>:
+				When printing in 2-up or 4-up page mode, this command forces a logical page break.
+				Otherwise it is the same as a physical page break.</FONT>
+				</P>
+			</TD>
+		</TR>
+		<TR>
+			<TD class="left">
+				<P><CODE>{new_physical_page}</CODE><BR><CODE>{npp}</CODE></P></TD>
+			<TD>
+				<P>Forces a physical page break.</P>
+			</TD>
+		</TR>
+		<TR>
+			<TD class="left">
+				<P><CODE>{columns:<VAR>number</VAR>}</CODE><BR><CODE>{col:<VAR>number</VAR>}</CODE></P>
+			</TD>
+			<TD>
+				<P>Specifies the number of columns to print the current song in.</P>
+			</TD>
+		</TR>
+		<TR>
+			<TD class="left">
+				<P><CODE>{column_break}</CODE><BR><CODE>{colb}</CODE></P>
+			</TD>
+			<TD>
+				<P>Forces a column break.	 </P>
+			</TD>
+		</TR>
+		<TR>
+			<TD class="left">
+				<P style="color: blue;"><CODE>{pagetype:<VAR>type</VAR>}</CODE></P>
+			</TD>
+			<TD>
+				<P><FONT color="#0000b0">Chord<I><SUB>ii</SUB></I>:
+				Sets the page type for the PostScript output.
+				<VAR>type</VAR> can be either <CODE>a4</CODE> or <CODE>letter</CODE>.</FONT></P>
+			</TD>
+		</TR>
+	</TBODY>
 	</TABLE></TD></TR>
 	<TR>
 		<TD><HR></TD>
