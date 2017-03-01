@@ -81,7 +81,11 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Version.h" />
     <ClInclude Include="ChordProFile.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ChordPro2SVG.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

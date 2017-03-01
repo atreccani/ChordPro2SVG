@@ -1,3 +1,4 @@
+#include <QCommandLineParser>
 #include <QDir>
 #include <QFile>
 #include <QGuiApplication> 
@@ -7,6 +8,7 @@
 #include <QTextStream>
 
 #include "ChordProFile.h"
+#include "../Version.h"
 
 // 90 DPI
 #define A4_INKSCAPE_WIDTH	744
@@ -20,6 +22,10 @@ class ChordProPainter : public QPainter
 public:
 	void paint(ChordProFile *chproFile)
 	{
+		parsed_item_t it;
+		QString value1;
+		QString value2;
+
 		setPen(Qt::NoPen);
 
 		setPen(QPen(Qt::GlobalColor::red, 2, Qt::DashLine));
@@ -30,8 +36,14 @@ public:
 		setFont(QFont("Arial", 20, QFont::Bold));
 		drawText(330, 40, chproFile->title());
 
-		putline(40, 120, QString::fromWCharArray(L"[C]Penso che un sogno [C#dim7]così non ritorni mai [Dm]più"));
-
+		chproFile->parserReinit();
+		while ((it = chproFile->parserGet(value1, value2)) != PARSED_ITEM_MIN) {
+			switch (it) {
+			case PARSED_ITEM_TEXT:
+				putline(40, 120, value1);
+				break;
+			}
+		}
 	}
 
 	int putline(int x, int y, QString mystr)
@@ -110,6 +122,13 @@ int main(int argc, char *argv[])
 
 		// Needed for QFont
 	QGuiApplication a(argc, argv);
+	a.setApplicationName(VERSION_STR_NAME);
+	a.setApplicationVersion(VERSION_STR_N3);
+
+	// allow to see app version with the - v/--version option at command line
+	QCommandLineParser parser;
+	parser.addVersionOption();
+	parser.process(a);
 
 	// Windows specific: use Code Page 850 (Western Europe) for console writing
 	cout.setCodec("CP-850");
@@ -127,7 +146,7 @@ int main(int argc, char *argv[])
 	ChordProFile *file = ChordProFileList[0];
 	file->print(cout);
 
-	QString path = "../Work/ChordProTest.svg";
+	const QString path = file->fileNameWithExt("svg");
 
 	QSvgGenerator generator;
 	generator.setFileName(path);
