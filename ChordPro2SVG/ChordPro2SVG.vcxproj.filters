@@ -24,15 +24,15 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ChordProFile.cpp">
+    <ClCompile Include="ChordProParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ChordProFile.h">
+    <ClInclude Include="..\Version.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Version.h">
+    <ClInclude Include="ChordProParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

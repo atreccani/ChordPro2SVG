@@ -7,8 +7,8 @@
 #include <QSvgGenerator>
 #include <QTextStream>
 
-#include "ChordProFile.h"
 #include "../Version.h"
+#include "ChordProParser.h"
 
 // 90 DPI
 #define A4_INKSCAPE_WIDTH	744
@@ -20,11 +20,10 @@ QTextStream cin(stdin);
 class ChordProPainter : public QPainter
 {
 public:
-	void paint(ChordProFile *chproFile)
+	void paint(ChordProParser *chproFile)
 	{
 		parsed_item_t it;
-		QString value1;
-		QString value2;
+		QString value;
 
 		setPen(Qt::NoPen);
 
@@ -36,11 +35,13 @@ public:
 		setFont(QFont("Arial", 20, QFont::Bold));
 		drawText(330, 40, chproFile->title());
 
-		chproFile->parserReinit();
-		while ((it = chproFile->parserGet(value1, value2)) != PARSED_ITEM_MIN) {
+		chproFile->reinit();
+		while ((it = chproFile->get(value)) != PARSED_ITEM_NONE) {
+			cout << "Id : " << it << endl;
+			cout << "Val: " << value << endl << endl;
 			switch (it) {
 			case PARSED_ITEM_TEXT:
-				putline(40, 120, value1);
+				putline(40, 120, value);
 				break;
 			}
 		}
@@ -96,7 +97,48 @@ public:
 
 };
 
-void fill_chordpro_file_list(QList <ChordProFile *> &list_ref)
+bool load_file(QFile *file, ChordProParser *parser)
+{
+	QString line;
+	QTextStream in(file);
+
+	/*	To be a valid ChordPro file it should be
+	- less than 100k (it's a plain text file!)
+	- Contain title directive in first 1k
+	*/
+	if (file->size() > (100 * 1024)) {
+		return false;
+	}
+	// Open the file for reading
+	if (!file->open(QIODevice::ReadOnly)) {
+		cout << "Unable to open file" << endl;
+	}
+
+	// Assume file is coded in UTF-8
+	in.setCodec("UTF-8");
+
+	// Load file only partially for validity test
+	*parser = in.read(1024);
+
+	parser->reinit();
+
+	if (!parser->parseTitle()) {
+		return false;
+	}
+
+	parser->m_fileinfo.setFile(file->fileName());
+
+	// Load the full file into a string
+	in.seek(0);
+	*parser = in.readAll();
+
+	// Close the file
+	file->close();
+
+	return true;
+}
+
+void fill_chordpro_file_list(QList <ChordProParser *> &list_ref)
 {
 	QDir dir("../Work");
 	if (!dir.exists())
@@ -109,16 +151,18 @@ void fill_chordpro_file_list(QList <ChordProFile *> &list_ref)
 
 	for (int i = 0; i < list.size(); ++i) {
 		QString sName = list.at(i).filePath();
-		ChordProFile *file = new ChordProFile(sName);
-		if (file->load(cout)) {
-			list_ref.append(file);
+		QFile *file = new QFile(sName);
+		ChordProParser *parser = new ChordProParser();
+
+		if (load_file(file, parser)) {
+			list_ref.append(parser);
 		}
 	}
 }
 
 int main(int argc, char *argv[])
 {
-	QList <ChordProFile *> ChordProFileList;
+	QList <ChordProParser *> ChordProFileList;
 
 		// Needed for QFont
 	QGuiApplication a(argc, argv);
@@ -143,10 +187,10 @@ int main(int argc, char *argv[])
 	}
 	cout << endl;
 
-	ChordProFile *file = ChordProFileList[0];
-	file->print(cout);
+	ChordProParser *file = ChordProFileList[0];
+	cout << file << endl;
 
-	const QString path = file->fileNameWithExt("svg");
+	const QString path = file->m_fileinfo.path() + "/" + file->m_fileinfo.completeBaseName() + ".svg";
 
 	QSvgGenerator generator;
 	generator.setFileName(path);
