@@ -77,11 +77,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ChordProPainter.cpp" />
     <ClCompile Include="ChordProParser.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Version.h" />
+    <ClInclude Include="ChordProPainter.h" />
     <ClInclude Include="ChordProParser.h" />
   </ItemGroup>
   <ItemGroup>

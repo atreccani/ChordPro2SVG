@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** ChordPro file interface.
+** ChordPro parser.
 **
 ****************************************************************************/
 
@@ -26,8 +26,6 @@ typedef enum {
 	PARSED_ITEM_DIRECTIVE_TAB_START,
 	PARSED_ITEM_DIRECTIVE_TAB_END,
 	PARSED_ITEM_DIRECTIVE_DEFINE,
-
-	PARSED_ITEM_SONG_LINE,
 
 	PARSED_ITEM_MAX
 } parsed_item_t;
@@ -57,5 +55,6 @@ private:
 	QStringList		m_Subtitles;
 };
 
+extern const char *ParserLabel(parsed_item_t it);
 
 #endif // CHORDPROPARSER_H

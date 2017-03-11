@@ -1,13 +1,14 @@
 #include <QCommandLineParser>
+#include <QDateTime>
 #include <QDir>
 #include <QFile>
 #include <QGuiApplication> 
 #include <QPainter>
-#include <QPen>
 #include <QSvgGenerator>
 #include <QTextStream>
 
 #include "../Version.h"
+#include "ChordProPainter.h"
 #include "ChordProParser.h"
 
 // 90 DPI
@@ -17,85 +18,8 @@
 QTextStream cout(stdout);
 QTextStream cin(stdin);
 
-class ChordProPainter : public QPainter
-{
-public:
-	void paint(ChordProParser *chproFile)
-	{
-		parsed_item_t it;
-		QString value;
-
-		setPen(Qt::NoPen);
-
-		setPen(QPen(Qt::GlobalColor::red, 2, Qt::DashLine));
-		drawRect((QRect(0, 0, A4_INKSCAPE_WIDTH, A4_INKSCAPE_HEIGHT)));
-
-		setPen(QPen(Qt::GlobalColor::black));
-		QFont font;
-		setFont(QFont("Arial", 20, QFont::Bold));
-		drawText(330, 40, chproFile->title());
-
-		chproFile->reinit();
-		while ((it = chproFile->get(value)) != PARSED_ITEM_NONE) {
-			cout << "Id : " << it << endl;
-			cout << "Val: " << value << endl << endl;
-			switch (it) {
-			case PARSED_ITEM_TEXT:
-				putline(40, 120, value);
-				break;
-			}
-		}
-	}
-
-	int putline(int x, int y, QString mystr)
-	{
-		QFont myFont("Calibri", 16, QFont::Weight::Normal);
-		QFontMetrics fm(myFont, device());
-		int xLyrics = x;
-		int xChords = x;
-		bool bChord = false;
-
-		setFont(myFont);
-
-		for (unsigned int i = 0; i < mystr.size(); i++)
-		{
-			if (bChord) {
-				if (mystr[i] == "]") {
-					// end of chord sequence
-					bChord = false;
-					// special character, not to be printed
-					continue;
-				}
-			}
-			else {
-				if (mystr[i] == "[") {
-					// start of chord sequence
-					bChord = true;
-					// align chord coordinate to lyrics 
-					xChords = xLyrics;
-
-					// special character, not to be printed
-					continue;
-				}
-			}
-
-			QString myChar = mystr[i];	// get character to print
-			if (bChord) {
-				// Print Chord
-				drawText(xChords, y - 20, myChar);	// output char
-				xChords += fm.width(myChar, 1);		// advance current position horizontally
-			}
-			else {
-				// Print Lyrics
-				drawText(xLyrics, y, myChar);		// output char
-				xLyrics += fm.width(myChar, 1);		// advance current position horizontally
-			}
-
-		}
-		return xLyrics;
-	}
-
-};
+// Smart pointer to log file
+QScopedPointer<QFile>   logFile;
 
 bool load_file(QFile *file, ChordProParser *parser)
 {
@@ -160,14 +84,42 @@ void fill_chordpro_file_list(QList <ChordProParser *> &list_ref)
 	}
 }
 
+// Message handler to redirect qDebug(), qInfo(), qWarning(), qCritical() and qFatal()
+void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+	// Open stream file writes
+	QTextStream out(logFile.data());
+	// Write the date of recording
+	out << QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz ");
+	// By type determine to what level belongs message
+	switch (type) {
+	case QtInfoMsg:     out << "INF "; break;
+	case QtDebugMsg:    out << "DBG "; break;
+	case QtWarningMsg:  out << "WRN "; break;
+	case QtCriticalMsg: out << "CRT "; break;
+	case QtFatalMsg:    out << "FTL "; break;
+	}
+	// Write to the output category of the message and the message itself
+	out << context.category << ": " << msg << endl;
+	out.flush();    // Clear the buffered data
+}
+
 int main(int argc, char *argv[])
 {
-	QList <ChordProParser *> ChordProFileList;
+	QList <ChordProParser *> song_list;
 
 		// Needed for QFont
 	QGuiApplication a(argc, argv);
 	a.setApplicationName(VERSION_STR_NAME);
 	a.setApplicationVersion(VERSION_STR_N3);
+
+	// Set the logging file
+	// check which a path to file you use 
+	logFile.reset(new QFile("../Work/log.txt"));
+	// Open the file logging
+	logFile.data()->open(QFile::Append | QFile::Text);
+	// Set handler
+	qInstallMessageHandler(messageHandler);
 
 	// allow to see app version with the - v/--version option at command line
 	QCommandLineParser parser;
@@ -178,19 +130,19 @@ int main(int argc, char *argv[])
 	cout.setCodec("CP-850");
 
 	// Fill a list of valid ChordPro files, each file will also be fully loaded into memory (as a QString)
-	fill_chordpro_file_list(ChordProFileList);
+	fill_chordpro_file_list(song_list);
 
 	// Print a list of found ChordPro files
-	cout << "Found " << ChordProFileList.size() << " ChordPro files:" << endl;
-	for (int ii = 0; ii < ChordProFileList.size(); ii++) {
-		cout << " - " << ChordProFileList[ii]->title() << endl;
+	cout << "Found " << song_list.size() << " ChordPro files:" << endl;
+	for (int ii = 0; ii < song_list.size(); ii++) {
+		cout << " - " << song_list[ii]->title() << endl;
 	}
 	cout << endl;
 
-	ChordProParser *file = ChordProFileList[0];
-	cout << file << endl;
+	ChordProParser *act_song = song_list[0];
+	cout << *act_song << endl;
 
-	const QString path = file->m_fileinfo.path() + "/" + file->m_fileinfo.completeBaseName() + ".svg";
+	const QString path = act_song->m_fileinfo.path() + "/" + act_song->m_fileinfo.completeBaseName() + ".svg";
 
 	QSvgGenerator generator;
 	generator.setFileName(path);
@@ -202,7 +154,7 @@ int main(int argc, char *argv[])
 
 	ChordProPainter painter;
 	painter.begin(&generator);
-	painter.paint(file);
+	painter.paint(act_song);
 	painter.end();
 
 	// get actual size QPaintDevice 

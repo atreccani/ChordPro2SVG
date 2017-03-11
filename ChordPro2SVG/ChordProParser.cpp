@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** ChordPro file interface.
+** ChordPro parser.
 **
 ****************************************************************************/
 #include <QFile>
@@ -39,8 +39,7 @@ static const directive_define_t directive_list[] = {
 
 QString &ChordProParser::operator=(const QString &other)
 {
-	*this = other;
-	return *this;
+	return QString::operator=(other);
 }
 
 bool ChordProParser::parseTitle(void)
@@ -204,4 +203,28 @@ void ChordProParser::getText(QString &arg)
 		arg += *m_Pos;
 		m_Pos++;
 	}
+}
+
+const char *ParserLabel(parsed_item_t it)
+{
+	switch (it) {
+	case PARSED_ITEM_NONE:						return "None";
+	case PARSED_ITEM_TEXT:						return "Text";
+	case PARSED_ITEM_COMMENT:					return "Comment";
+
+	// Directives
+	case PARSED_ITEM_DIRECTIVE_NONE:			return "Directive - None";
+	case PARSED_ITEM_DIRECTIVE_NEW_SONG:		return "Directive - New song";
+	case PARSED_ITEM_DIRECTIVE_TITLE:			return "Directive - Title";
+	case PARSED_ITEM_DIRECTIVE_SUBTITLE:		return "Directive - Subtitle";
+	case PARSED_ITEM_DIRECTIVE_COMMENT:			return "Directive - Comment";
+	case PARSED_ITEM_DIRECTIVE_COMMENT_ITALIC:	return "Directive - Comment italic";
+	case PARSED_ITEM_DIRECTIVE_COMMENT_BOX:		return "Directive - Comment box";
+	case PARSED_ITEM_DIRECTIVE_CHORUS_START:	return "Directive - Chorus start";
+	case PARSED_ITEM_DIRECTIVE_CHORUS_END:		return "Directive - Chorus end";
+	case PARSED_ITEM_DIRECTIVE_TAB_START:		return "Directive - Tab start";
+	case PARSED_ITEM_DIRECTIVE_TAB_END:			return "Directive - Tab end";
+	case PARSED_ITEM_DIRECTIVE_DEFINE:			return "Directive - Define";
+	}
+	return "?";
 }
