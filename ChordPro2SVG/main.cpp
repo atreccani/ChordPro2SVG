@@ -104,6 +104,31 @@ void messageHandler(QtMsgType type, const QMessageLogContext &context, const QSt
 	out.flush();    // Clear the buffered data
 }
 
+// Create the svg file for the given song
+void createSVG(ChordProParser *act_song)
+{
+	// Set the destination .svg file name changing extension to the source .pro file name
+	const QString path = act_song->m_fileinfo.path() + "/" + act_song->m_fileinfo.completeBaseName() + ".svg";
+
+	QSvgGenerator generator;
+	generator.setFileName(path);
+
+	generator.setSize(QSize(A4_INKSCAPE_WIDTH, A4_INKSCAPE_HEIGHT));
+	generator.setViewBox(QRect(0, 0, A4_INKSCAPE_WIDTH, A4_INKSCAPE_HEIGHT));
+	generator.setTitle("ChordPro2SVG Test");
+	generator.setDescription("An SVG drawing created by ChordPro2SVG.");
+
+	ChordProPainter painter;
+	painter.begin(&generator);
+	painter.paint(act_song);
+	painter.end();
+
+	// get actual size QPaintDevice 
+	cout << "generator.width:  " << generator.width() << endl;
+	cout << "generator.height: " << generator.height() << endl;
+}
+
+
 int main(int argc, char *argv[])
 {
 	QList <ChordProParser *> song_list;
@@ -142,24 +167,8 @@ int main(int argc, char *argv[])
 	ChordProParser *act_song = song_list[0];
 	cout << *act_song << endl;
 
-	const QString path = act_song->m_fileinfo.path() + "/" + act_song->m_fileinfo.completeBaseName() + ".svg";
-
-	QSvgGenerator generator;
-	generator.setFileName(path);
-
-	generator.setSize(QSize(A4_INKSCAPE_WIDTH, A4_INKSCAPE_HEIGHT));
-	generator.setViewBox(QRect(0, 0, A4_INKSCAPE_WIDTH, A4_INKSCAPE_HEIGHT));
-	generator.setTitle("ChordPro2SVG Test");
-	generator.setDescription("An SVG drawing created by ChordPro2SVG.");
-
-	ChordProPainter painter;
-	painter.begin(&generator);
-	painter.paint(act_song);
-	painter.end();
-
-	// get actual size QPaintDevice 
-	cout << "generator.width:  " << generator.width()  << endl;
-	cout << "generator.height: " << generator.height() << endl;
+	// Create the svg file of the song
+	createSVG(act_song);
 
 	// Windows specific pause
 	system("pause");

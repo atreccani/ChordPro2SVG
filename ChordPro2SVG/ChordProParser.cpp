@@ -78,8 +78,6 @@ void ChordProParser::reinit(void)
 
 parsed_item_t ChordProParser::get(QString &arg)
 {
-	parsed_item_t eRet;
-
 	if (m_Pos >= end()) {
 		return PARSED_ITEM_NONE;
 	}
@@ -87,24 +85,30 @@ parsed_item_t ChordProParser::get(QString &arg)
 	arg.clear();
 
 	// detect string type depending on first character
-	if (isLineBegin() && (*m_Pos == '#')) {
+	switch (item_starting()) {
+	case PARSED_ITEM_NEWLINE:
+		m_Pos++;
+		return PARSED_ITEM_NEWLINE;
+
+	case PARSED_ITEM_COMMENT:
 		// Comment started
 		getComment(arg);
 		return PARSED_ITEM_COMMENT;
-	}
-	else if (*m_Pos == '{') {
+
+	case PARSED_ITEM_CHORD:
+		// Chord started
+		getChord(arg);
+		return PARSED_ITEM_CHORD;
+	
+	case PARSED_ITEM_DIRECTIVE_NONE:
 		// Directive started
-		eRet = getDirective(arg);
-		return eRet;
-	}
-	else {
+		return getDirective(arg);
+	
+	default:
 		// Normal text
 		getText(arg);
 		return PARSED_ITEM_TEXT;
 	}
-
-	// Nothing left to be parsed
-	return PARSED_ITEM_NONE;
 
 }
 
@@ -115,6 +119,16 @@ bool ChordProParser::isLineBegin(void)
 		return true;
 	}
 	return (*(m_Pos - 1) == '\n');
+}
+
+parsed_item_t ChordProParser::item_starting()
+{
+	if (*m_Pos == '\n')						return PARSED_ITEM_NEWLINE;
+	if (isLineBegin() && (*m_Pos == '#'))	return PARSED_ITEM_COMMENT;
+	if (*m_Pos == '[')						return PARSED_ITEM_CHORD;
+	if (*m_Pos == '{')						return PARSED_ITEM_DIRECTIVE_NONE;
+
+	return PARSED_ITEM_NONE;
 }
 
 parsed_item_t ChordProParser::parseDirective(QString &label)
@@ -146,6 +160,20 @@ void ChordProParser::getComment(QString &arg)
 		if (*m_Pos == '\n') {
 			// Comment stops at the end of line
 			m_Pos++;	// skip '\n'
+			return;
+		}
+		arg += *m_Pos;
+		m_Pos++;
+	}
+}
+
+void ChordProParser::getChord(QString &arg)
+{
+	m_Pos++;	// skip '['
+	while (m_Pos < end()) {
+		if (*m_Pos == ']') {
+			// Chord stop when ] is found 
+			m_Pos++;	// skip ']'
 			return;
 		}
 		arg += *m_Pos;
@@ -192,12 +220,8 @@ void ChordProParser::getText(QString &arg)
 
 	while (m_Pos < end()) {
 
-		if (isLineBegin() && (*m_Pos == '#')) {
-			// Comment starting
-			return;
-		}
-		else if (*m_Pos == '{') {
-			// Directive starting
+		if ( item_starting() != PARSED_ITEM_NONE)  {
+			// Something different from normal text is starting
 			return;
 		}
 		arg += *m_Pos;
@@ -209,8 +233,10 @@ const char *ParserLabel(parsed_item_t it)
 {
 	switch (it) {
 	case PARSED_ITEM_NONE:						return "None";
-	case PARSED_ITEM_TEXT:						return "Text";
+	case PARSED_ITEM_NEWLINE:					return "Newline";
 	case PARSED_ITEM_COMMENT:					return "Comment";
+	case PARSED_ITEM_CHORD:						return "Chord";
+	case PARSED_ITEM_TEXT:						return "Text";
 
 	// Directives
 	case PARSED_ITEM_DIRECTIVE_NONE:			return "Directive - None";

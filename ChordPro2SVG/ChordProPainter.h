@@ -18,7 +18,8 @@ public:
 private:
 	void reinit(void);
 	void startline(void);
-	void putchar(QChar *scan);
+	void putlyrics(QString scan);
+	void putchord(QString name);
 
 private:
 	QFont *fontLyrics;
@@ -26,7 +27,6 @@ private:
 	int xLyrics;
 	int xChords;
 	int yLyrics;
-	bool bChord;
 
 };
 

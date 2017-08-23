@@ -10,8 +10,10 @@
 typedef enum {
 	PARSED_ITEM_MIN = 0,
 	PARSED_ITEM_NONE			= PARSED_ITEM_MIN,
-	PARSED_ITEM_TEXT,
+	PARSED_ITEM_NEWLINE,
 	PARSED_ITEM_COMMENT,
+	PARSED_ITEM_CHORD,
+	PARSED_ITEM_TEXT,
 
 	// Directives
 	PARSED_ITEM_DIRECTIVE_NONE,
@@ -41,8 +43,10 @@ public:
 
 private:
 	bool isLineBegin(void);
+	parsed_item_t item_starting();
 	parsed_item_t parseDirective(QString &label);
 	void getComment(QString &arg);
+	void getChord(QString &arg);
 	parsed_item_t getDirective(QString &arg);
 	void getText(QString &arg);
 
