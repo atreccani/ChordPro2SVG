@@ -3,6 +3,7 @@
 ** ChordPro parser.
 **
 ****************************************************************************/
+#include <QDebug>
 #include <QFile>
 #include <QFileInfo>
 #include <QTextStream>
@@ -69,6 +70,57 @@ bool ChordProParser::parseTitle(void)
 QString &ChordProParser::title()
 {
 	return m_Title;
+}
+
+void ChordProParser::parseAll(void)
+{
+	// Create list of parsed data
+	ParsedSongItem song_elem;
+
+	reinit();
+	while ((song_elem.id = get(song_elem.value)) != PARSED_ITEM_NONE) {
+		m_AllItems << song_elem;
+		qInfo() << "Id : " << ParserLabel(song_elem.id);
+		qInfo() << "Val: " << song_elem.value << endl;
+	}
+
+}
+
+void ChordProParser::removeMultipleSpaces(void)
+{
+	bool newline_found = false;
+
+	QList<ParsedSongItem>::iterator it = m_AllItems.begin();
+	while (it != m_AllItems.end()) {
+		if (newline_found) {
+			if (
+				(it->id == PARSED_ITEM_NEWLINE) || 
+				((it->id == PARSED_ITEM_TEXT) && (it->value.trimmed().isEmpty()))	/* nothing but whitespace */
+			) {
+				QString Log = QString("Removing Id: ") + ParserLabel(it->id) + QString(", Val: ") + it->value;
+				// qInfo() << "Val: " << song_elem.value << endl;
+
+				it = m_AllItems.erase(it);
+			} else {
+				newline_found = false;
+				it++;
+			}
+		}
+		else {
+			if (it->id == PARSED_ITEM_NEWLINE) {
+				newline_found = true;
+			}
+			it++;
+		}
+	}
+	if (newline_found) {
+		m_AllItems.removeLast();
+	}
+}
+
+QList <ParsedSongItem> &ChordProParser::all()
+{
+	return m_AllItems;
 }
 
 void ChordProParser::reinit(void)

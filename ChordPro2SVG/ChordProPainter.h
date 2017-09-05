@@ -13,7 +13,7 @@ class ChordProPainter : public QPainter
 {
 public:
 	ChordProPainter();
-	void paint(ChordProParser *chproFile);
+	QSize paint(ChordProParser *chproFile);
 
 private:
 	void reinit(void);
@@ -22,12 +22,15 @@ private:
 	void putchord(QString name);
 
 private:
+	QFont *fontTitle;
 	QFont *fontLyrics;
-	QFontMetrics *fmLyrics;
+
 	int xLyrics;
 	int xChords;
 	int yLyrics;
 
+	int xMax;
+	int yMax;
 };
 
 

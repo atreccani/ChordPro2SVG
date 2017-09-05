@@ -32,14 +32,31 @@ typedef enum {
 	PARSED_ITEM_MAX
 } parsed_item_t;
 
+class ParsedSongItem {
+public:
+	//ParsedSongItem() {}
+	//ParsedSongItem(const ParsedSongItem &other);
+
+	//ParsedSongItem &operator=(const ParsedSongItem &other);
+
+public:
+	parsed_item_t	id;
+	QString			value;
+};
+
 class ChordProParser : public QString
 {
 public:
 	QString &operator=(const QString &other);
 	bool parseTitle(void);
 	QString &title();
+	void parseAll(void);
+	void removeMultipleSpaces(void);
+	QList <ParsedSongItem> &all();
 	void reinit(void);
 	parsed_item_t get(QString &arg);
+
+
 
 private:
 	bool isLineBegin(void);
@@ -57,6 +74,8 @@ private:
 	QChar			*m_Pos;
 	QString			m_Title;
 	QStringList		m_Subtitles;
+	QList <ParsedSongItem> m_AllItems;
+
 };
 
 extern const char *ParserLabel(parsed_item_t it);

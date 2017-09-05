@@ -11,9 +11,14 @@
 #include "ChordProPainter.h"
 #include "ChordProParser.h"
 
-// 90 DPI
-#define A4_INKSCAPE_WIDTH	744
-#define A4_INKSCAPE_HEIGHT 1052
+// Resolution set to 254 dots per inch, i.e 10 dots per mm
+#define SVG_OUT_RESOLUTION			254
+#define SVG_OUT_A4_VERTICAL_WIDTH	2100	// dimensione "canvas" in pixel
+#define SVG_OUT_A4_VERTICAL_HEIGHT	2970	// dimensione "canvas" in pixel
+
+#define PAGE_MARGIN_X		20
+#define PAGE_MARGIN_Y		25
+
 
 QTextStream cout(stdout);
 QTextStream cin(stdin);
@@ -108,24 +113,85 @@ void messageHandler(QtMsgType type, const QMessageLogContext &context, const QSt
 void createSVG(ChordProParser *act_song)
 {
 	// Set the destination .svg file name changing extension to the source .pro file name
-	const QString path = act_song->m_fileinfo.path() + "/" + act_song->m_fileinfo.completeBaseName() + ".svg";
+	const QString path = act_song->m_fileinfo.path() + "/" + act_song->m_fileinfo.completeBaseName() + "_pre.svg";
+
+	// Parse all elements of the song
+	act_song->parseAll();
+	act_song->removeMultipleSpaces();
+
+
+	ChordProPainter painter;
+
+	painter.setViewport(QRect(0, 0, SVG_OUT_A4_VERTICAL_WIDTH, SVG_OUT_A4_VERTICAL_HEIGHT));
+	painter.setWindow(QRect(0, 0, SVG_OUT_A4_VERTICAL_WIDTH, SVG_OUT_A4_VERTICAL_HEIGHT));
+	// Execute a "virtual" paint (without generator) to determine actual size of drawing
+	QSize paint_size = painter.paint(act_song);
 
 	QSvgGenerator generator;
+
+
 	generator.setFileName(path);
 
-	generator.setSize(QSize(A4_INKSCAPE_WIDTH, A4_INKSCAPE_HEIGHT));
-	generator.setViewBox(QRect(0, 0, A4_INKSCAPE_WIDTH, A4_INKSCAPE_HEIGHT));
+	// Initialize the SVG generator
+	generator.setResolution(SVG_OUT_RESOLUTION);
+	generator.setSize(QSize(SVG_OUT_A4_VERTICAL_WIDTH, SVG_OUT_A4_VERTICAL_HEIGHT));
+	generator.setViewBox(QRect(0, 0, SVG_OUT_A4_VERTICAL_WIDTH, SVG_OUT_A4_VERTICAL_HEIGHT));
 	generator.setTitle("ChordPro2SVG Test");
 	generator.setDescription("An SVG drawing created by ChordPro2SVG.");
 
-	ChordProPainter painter;
+	// Execute the definitive paint on the SVG generator
 	painter.begin(&generator);
-	painter.paint(act_song);
+
+	// painter.translate(PAGE_MARGIN_X, PAGE_MARGIN_Y);
+
+	paint_size = painter.paint(act_song);
+	painter.drawRect(QRect(0, 0, SVG_OUT_A4_VERTICAL_WIDTH / 2, SVG_OUT_A4_VERTICAL_HEIGHT / 2));
+
 	painter.end();
+
+
+
+
+
+	qreal ratioX = ((qreal)paint_size.width()) / ((qreal)SVG_OUT_A4_VERTICAL_WIDTH);
+	qreal ratioY = ((qreal)paint_size.height()) / ((qreal)SVG_OUT_A4_VERTICAL_HEIGHT);
+
+	int final_width;
+	int final_height;
+	if (ratioX > ratioY) {
+		final_width = paint_size.width();
+		final_height = ratioX * ((qreal)SVG_OUT_A4_VERTICAL_HEIGHT);
+
+	} else {
+		final_width = ratioY * ((qreal)SVG_OUT_A4_VERTICAL_WIDTH);
+		final_height = paint_size.height();
+	}
+
+
+
+
 
 	// get actual size QPaintDevice 
 	cout << "generator.width:  " << generator.width() << endl;
 	cout << "generator.height: " << generator.height() << endl;
+
+	QSvgGenerator generator2;
+	const QString path2 = act_song->m_fileinfo.path() + "/" + act_song->m_fileinfo.completeBaseName() + ".svg";
+	
+	generator2.setFileName(path2);
+	generator2.setResolution(SVG_OUT_RESOLUTION);
+	generator2.setSize(QSize(SVG_OUT_A4_VERTICAL_WIDTH, SVG_OUT_A4_VERTICAL_HEIGHT));
+	generator2.setViewBox(QRect(0, 0, final_width, final_height));
+	generator.setTitle("ChordPro2SVG Test");
+	generator2.setTitle("ChordPro2SVG Test");
+	generator2.setDescription("An SVG drawing created by ChordPro2SVG.");
+	
+	// Execute the definitive paint on the SVG generator
+	painter.begin(&generator2);
+	// painter.scale(0.5, 0.5);
+	paint_size = painter.paint(act_song);
+	painter.end();
+
 }
 
 
